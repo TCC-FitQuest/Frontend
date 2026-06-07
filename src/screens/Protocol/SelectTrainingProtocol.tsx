@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import { CircleX, Settings2, ChevronRight } from 'lucide-react-native';
-import Modal from 'react-native-modal';
-import { CameraView } from 'expo-camera';
+import { CircleX, Settings2, ChevronRight, Dumbbell, User } from 'lucide-react-native'; // Ícones adicionados
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 import { getTrainingByType, getTrainingByUserId, getTrainingWeekByTrainingId } from '../../service/trainingService';
@@ -13,32 +11,38 @@ import { useTrainingStore } from '../../store/useTrainingStore';
 import { updateUser } from '../../service/userService';
 import { useUserStore } from '../../store/useUserStore';
 import { Header } from '../../components/ui/Header';
+import { ActionButton } from '../../components/ui/ActionButton'; // ActionButton importado
 
-export function SelectTrainingProtocol() {
+type TabType = 'gym' | 'personal';
+
+export default function SelectTrainingProtocol() {
     const navigation = useNavigation<NavigationProp<NavigationTypes>>();
-    const [showCustom, setShowCustom] = useState(true);
-    const [trainings, setTrainings] = useState<any[]>([]);
-    const [trainingsPersonal, setTrainingsPersonal] = useState<any[]>([]);
-    const [scannerOpen, setScannerOpen] = useState(false);
+
+    // Controle das Abas
+    const [activeTab, setActiveTab] = useState<TabType>('gym');
+
+    // Estados para cada tipo de treino
+    const [trainings, setTrainings] = useState<any[]>([]); // Gym/Plataforma
+    const [personalProtocols, setPersonalProtocols] = useState<any[]>([]);
 
     const user = useUserStore((state) => state.user);
     const setUser = useUserStore((state) => state.setUser);
     const setProtocol = useTrainingProtocolStore((state) => state.setProtocol);
     const setTrainingProtocol = useTrainingStore((state) => state.setTrainingProtocol);
-    const setTrainingFriend = useTrainingStore((state) => state.setTrainingFriend);
 
     useEffect(() => {
         if (!user) return;
         const fetchData = async () => {
             try {
-                const [gymRes, personalRes] = await Promise.all([
+                const [gymRes, userRes] = await Promise.all([
                     getTrainingByType('gym'),
                     getTrainingByUserId(Number(user?.id) || 0)
                 ]);
-                setTrainings(gymRes);
-                setTrainingsPersonal(personalRes);
+
+                setTrainings(gymRes || []);
+                setPersonalProtocols(userRes?.personal_protocols || []);
             } catch (error) {
-                console.error(error);
+                console.error("Erro ao buscar treinos:", error);
             }
         };
         fetchData();
@@ -82,12 +86,37 @@ export function SelectTrainingProtocol() {
         </TouchableOpacity>
     );
 
+    // Função para renderizar o conteúdo baseado na aba selecionada
+    const renderContent = () => {
+        let currentList = [];
+        let emptyMessage = "";
+
+        switch (activeTab) {
+            case 'gym':
+                currentList = trainings;
+                emptyMessage = "Nenhum treino na plataforma.";
+                break;
+            case 'personal':
+                currentList = personalProtocols;
+                emptyMessage = "Nenhum treino personalizado.";
+                break;
+        }
+
+        if (currentList.length > 0) {
+            return currentList.map(renderTrainingCard);
+        }
+
+        return (
+            <View className="items-center py-10 bg-white/5 rounded-3xl border border-white/10 border-dashed">
+                <Text className="text-white/60 font-medium text-sm">{emptyMessage}</Text>
+            </View>
+        );
+    };
+
     return (
         <ScreenBackground>
             <View style={{ flex: 1, zIndex: 10 }}>
                 <Header />
-
-                {/* Título e Botão Fechar - Adaptados para o fundo escuro */}
                 <View className="px-6 py-4 flex-row justify-between items-center mt-2">
                     <View>
                         <Text className="text-white text-3xl font-black tracking-tight">Treinos</Text>
@@ -102,9 +131,7 @@ export function SelectTrainingProtocol() {
                 </View>
 
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 100 }}>
-
-                    {/* Botão Gerenciar Protocolos - Fundo Translúcido */}
-                    <View className="px-6 mb-6 mt-2">
+                    <View className="px-6 mb-4">
                         <TouchableOpacity
                             onPress={() => navigation.navigate('ProtocolsManagementScreen')}
                             className="flex-row items-center justify-center gap-2 bg-white/10 border border-white/20 shadow-sm rounded-2xl py-4"
@@ -116,76 +143,30 @@ export function SelectTrainingProtocol() {
                         </TouchableOpacity>
                     </View>
 
-                    {/*  <View className="flex-row gap-3 px-6 mb-6">
-                        <TouchableOpacity
-                            onPress={() => setShowCustom(false)}
-                            className={`flex-1 py-3.5 rounded-xl border ${!showCustom
-                                ? 'bg-white border-white shadow-sm'
-                                : 'bg-white/10 border-white/20'
-                                }`}
-                        >
-                            <Text className={`font-bold text-center text-xs uppercase tracking-wider ${!showCustom ? 'text-[#1D2D3E]' : 'text-white/60'
-                                }`}>
-                                Plataforma
-                            </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => setShowCustom(true)}
-                            className={`flex-1 py-3.5 rounded-xl border ${showCustom
-                                ? 'bg-white border-white shadow-sm'
-                                : 'bg-white/10 border-white/20'
-                                }`}
-                        >
-                            <Text className={`font-bold text-center text-xs uppercase tracking-wider ${showCustom ? 'text-[#1D2D3E]' : 'text-white/60'
-                                }`}>
-                                Personalizados
-                            </Text>
-                        </TouchableOpacity>
-                    </View> */}
-
-                    <View className="px-6">
-                        {!showCustom ? (
-                            trainings.length > 0 ? (
-                                trainings.map(renderTrainingCard)
-                            ) : (
-                                <View className="items-center py-10 bg-white/5 rounded-3xl border border-white/10 border-dashed">
-                                    <Text className="text-white/60 font-medium text-sm">Nenhum treino na plataforma.</Text>
-                                </View>
-                            )
-                        ) : (
-                            trainingsPersonal.length > 0 ? (
-                                trainingsPersonal.map(renderTrainingCard)
-                            ) : (
-                                <View className="items-center py-10 bg-white/5 rounded-3xl border border-white/10 border-dashed">
-                                    <Text className="text-white/60 font-medium text-sm">Nenhum treino personalizado.</Text>
-                                </View>
-                            )
-                        )}
-                    </View>
-                </ScrollView>
-
-                {/* Modal de Scanner */}
-                <Modal isVisible={scannerOpen} style={{ margin: 0 }} onBackdropPress={() => setScannerOpen(false)}>
-                    <View className="flex-1 bg-black">
-                        <CameraView
-                            style={{ flex: 1 }}
-                            onBarcodeScanned={({ data }) => {
-                                setScannerOpen(false);
-                                try {
-                                    setTrainingFriend(JSON.parse(data));
-                                    navigation.goBack();
-                                } catch { console.error('QR inválido'); }
-                            }}
+                    {/* Botões atualizados usando o ActionButton */}
+                    <View className="bg-white/10 border border-white/20 rounded-2xl p-2 flex-row gap-2 shadow-sm mx-6 mb-6">
+                        <ActionButton
+                            label="Plataforma"
+                            icon={<Dumbbell color={activeTab === "gym" ? "white" : "#9CA3AF"} size={20} />}
+                            colors={["#0073B9", "#0088CC"]}
+                            active={activeTab === "gym"}
+                            onPress={() => setActiveTab("gym")}
                         />
-                        <TouchableOpacity
-                            onPress={() => setScannerOpen(false)}
-                            className="absolute bottom-12 self-center bg-black/50 px-8 py-4 rounded-full border border-white/20"
-                        >
-                            <Text className="text-white font-bold tracking-widest uppercase text-xs">Fechar Scanner</Text>
-                        </TouchableOpacity>
+                        <ActionButton
+                            label="Pessoais"
+                            icon={<User color={activeTab === "personal" ? "white" : "#9CA3AF"} size={20} />}
+                            colors={["#0073B9", "#0088CC"]}
+                            active={activeTab === "personal"}
+                            onPress={() => setActiveTab("personal")}
+                        />
                     </View>
-                </Modal>
+
+                    {/* Conteúdo Renderizado Corretamente */}
+                    <View className="px-6">
+                        {renderContent()}
+                    </View>
+
+                </ScrollView>
             </View>
         </ScreenBackground>
     );

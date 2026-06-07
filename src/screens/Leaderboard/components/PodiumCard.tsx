@@ -56,11 +56,8 @@ export function PodiumCard({
     height: number
     type?: "ranking" | "season"
 }) {
-    const [selectedUser, setSelectedUser] = useState<RankedUser | null>(null);
-
     const hasUser = !!user;
 
-    // Define as cores dos blocos baseados na colocação para o Tema Claro
     const baseColorClass = place === 1
         ? 'bg-amber-50 border-amber-200'
         : place === 2
@@ -80,7 +77,6 @@ export function PodiumCard({
         >
             <Pressable
                 disabled={!hasUser}
-                onPress={() => setSelectedUser(user || null)}
                 className="w-full items-center shadow-sm"
             >
                 <LinearGradient
@@ -145,14 +141,6 @@ export function PodiumCard({
                     {place}º
                 </Text>
             </View>
-
-            {selectedUser && (
-                <ProfileInfo
-                    visible={!!selectedUser}
-                    onClose={() => setSelectedUser(null)}
-                    selectedUser={selectedUser}
-                />
-            )}
         </Animated.View>
     )
 }

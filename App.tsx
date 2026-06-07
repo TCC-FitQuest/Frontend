@@ -14,14 +14,16 @@ cssInterop(BlurView, { className: 'style' });
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <ToastProvider>
-          <NavigationContainer>
+    <NavigationContainer>
+      <SafeAreaProvider>
+        <ThemeProvider>
+          <ToastProvider>
+
             <AppNavigator />
-          </NavigationContainer>
-        </ToastProvider>
-      </ThemeProvider>
-    </SafeAreaProvider>
+
+          </ToastProvider>
+        </ThemeProvider>
+      </SafeAreaProvider>
+    </NavigationContainer>
   );
 }

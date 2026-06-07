@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/Authentication/login';
 import TrainingDetail from '../screens/Training/StrengthDetail';
 import TrainingHistory from '../screens/Training/TrainingHistory';
-import { SelectTrainingProtocol } from '../screens/Protocol/SelectTrainingProtocol';
+import SelectTrainingProtocol from '../screens/Protocol/SelectTrainingProtocol';
 import { CreateTrainingProtocol } from '../screens/Protocol/CreateProtocolScreen';
 import ProtocolsManagementScreen from '../screens/Protocol/ProtocolsManagementScreen';
 

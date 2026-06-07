@@ -61,7 +61,7 @@ export function GymLoading({ text1 = "Carregando", text2 = "Aguarde um momento" 
         <Ionicons name="barbell" size={42} color="#22d3ee" />
       </Animated.View>
 
-      <Text className="text-cyan-400 text-lg font-bold tracking-wide">
+      <Text className="text-[#0073B9] text-lg font-bold tracking-wide">
         {text1}
       </Text>
 
@@ -70,7 +70,7 @@ export function GymLoading({ text1 = "Carregando", text2 = "Aguarde um momento" 
           <Animated.Text
             key={i}
             style={dotStyle(i)}
-            className="text-cyan-400 text-xl font-bold"
+            className="text-[#0073B9] text-xl font-bold"
           >
             .
           </Animated.Text>

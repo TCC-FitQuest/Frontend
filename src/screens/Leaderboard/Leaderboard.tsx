@@ -56,7 +56,7 @@ export default function Leaderboard() {
     const [search, setSearch] = useState("");
     const [results, setResults] = useState<RankedUser[]>([]);
     const [searching, setSearching] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<RankedUser | null>(null);
+
 
     useEffect(() => {
         if (!userStore?.id) return;
@@ -125,7 +125,6 @@ export default function Leaderboard() {
                 </View>
 
                 <View className="px-6 ">
-                    {/* Alterado para fundo translúcido para não sumir no #1D2D3E e manter o visual limpo */}
                     <View className="bg-white/10 border border-white/20 rounded-2xl p-2 flex-row gap-2 shadow-sm">
                         <ActionButton
                             label="Global"
@@ -176,32 +175,33 @@ export default function Leaderboard() {
                     {search.trim() === "" ? (
                         <>
                             {podium.length >= 0 && (
-                                <View className="flex-row justify-center items-end px-4 mt-6 mb-6 gap-3">
+                                <View className="flex-row justify-center items-end px-4 mt-6 mb-4 gap-3">
+
                                     <PodiumCard
                                         user={podium[1]}
                                         place={2}
                                         height={30}
-                                        gradientColors={["#F3F4F6", "#E5E7EB"]}
-                                        borderColor="#D1D5DB"
+                                        gradientColors={["#E5E7EB", "#D1D5DB"]}
+                                        borderColor="#9CA3AF"
                                     />
                                     <PodiumCard
                                         user={podium[0]}
                                         place={1}
                                         height={45}
-                                        gradientColors={["#FEF3C7", "#FDE68A"]}
-                                        borderColor="#FCD34D"
+                                        gradientColors={["#FEF08A", "#FACC15"]}
+                                        borderColor="#EAB308"
                                     />
                                     <PodiumCard
                                         user={podium[2]}
                                         place={3}
                                         height={20}
-                                        gradientColors={["#FFEDD5", "#FED7AA"]}
-                                        borderColor="#FDBA74"
+                                        gradientColors={["#FED7AA", "#FB923C"]}
+                                        borderColor="#EA580C"
                                     />
                                 </View>
                             )}
 
-                            <View className="px-6 gap-3 mt-2">
+                            <View className="px-4 gap-2">
                                 {showTopEllipsis && <RankingEllipsis />}
 
                                 {list.map((u, i) => {
@@ -210,13 +210,13 @@ export default function Leaderboard() {
                                         <Animated.View
                                             key={`rank-${u.id}`}
                                             entering={FadeInUp.delay(i * 30)}
-                                            className={`rounded-2xl p-4 shadow-sm ${isMe
+                                            className={`rounded-2xl p-2 shadow-sm ${isMe
                                                 ? "bg-[#E0F2FE] border border-[#0073B9]/30"
                                                 : "bg-white border border-gray-200"
                                                 }`}
                                         >
                                             <TouchableOpacity
-                                                onPress={() => setSelectedUser(u)}
+
                                                 className="flex-row items-center"
                                             >
                                                 <View className={`w-10 h-10 rounded-xl items-center justify-center border ${isMe ? "bg-[#0073B9] border-[#0073B9]" : "bg-gray-50 border-gray-200"
@@ -250,7 +250,6 @@ export default function Leaderboard() {
                                         className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm"
                                     >
                                         <TouchableOpacity
-                                            onPress={() => setSelectedUser(u)}
                                             className="flex-row items-center"
                                         >
                                             <View className="w-12 h-12 rounded-full bg-gray-100 border border-gray-200 items-center justify-center">
@@ -277,14 +276,6 @@ export default function Leaderboard() {
                         </View>
                     )}
                 </ScrollView>
-
-                {selectedUser && (
-                    <ProfileInfo
-                        visible={!!selectedUser}
-                        onClose={() => setSelectedUser(null)}
-                        selectedUser={selectedUser}
-                    />
-                )}
 
             </View>
         </ScreenBackground>

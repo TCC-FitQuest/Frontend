@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { MotiView } from "moti";
+import { Dumbbell } from "lucide-react-native";
 
 interface Props {
     trainingHistoryMonth?: any[];
@@ -9,113 +9,100 @@ interface Props {
 export function FrequencyTrainingMonth({ trainingHistoryMonth = [] }: Props) {
 
     const today = new Date();
-
     const year = today.getFullYear();
     const month = today.getMonth();
 
+    // Dados para montar o calendário real do mês
+    const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 = Domingo, 6 = Sábado
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
+    const emptyDays = Array.from({ length: firstDayOfMonth }, (_, i) => i);
     const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
+    const weekdays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+    const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+    // Verifica quais dias tiveram treino concluído (Ignora aeróbicos por segurança)
     const frequencyByDay = trainingHistoryMonth.reduce((acc, item) => {
-        const date = new Date(item.started_at);
+        const date = new Date(item.started_at || item.finished_at);
 
         if (date.getMonth() !== month || date.getFullYear() !== year) {
             return acc;
         }
 
-        const day = date.getDate();
-
-        if (!acc[day]) {
-            acc[day] = {
-                strength: false,
-                cardio: false,
-            };
-        }
-
-        if (item.status === "complete") {
-            if (item.type_training === "strength") acc[day].strength = true;
-            if (item.type_training === "aerobic") acc[day].cardio = true;
+        if (item.status === "complete" && item.type_training !== "aerobic") {
+            acc[date.getDate()] = true;
         }
 
         return acc;
-    }, {} as Record<number, { strength: boolean; cardio: boolean }>);
+    }, {} as Record<number, boolean>);
 
     return (
-        <View className="px-4 ">
-            <MotiView
-                from={{ opacity: 0, translateY: 10 }}
-                animate={{ opacity: 1, translateY: 0 }}
-                className="bg-slate-900 rounded-2xl p-4 border border-purple-500/30"
-            >
+        <MotiView
+            from={{ opacity: 0, translateY: 10 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            className="w-full"
+        >
+            {/* Cabeçalho do Calendário */}
+            <View className="flex-row items-center justify-between mb-4">
                 <View>
-                    <Text className="text-slate-400 text-sm mb-3">
-                        Frequência Mensal
+                    <Text className="text-[#1D2D3E] font-black text-lg tracking-tight">
+                        Frequência
                     </Text>
-
-                    <View className="flex-row flex-wrap gap-y-1">
-                        {daysArray.map((day) => {
-                            const data = frequencyByDay[day];
-                            const didStrength = data?.strength;
-                            const didCardio = data?.cardio;
-                            const bothDone = didStrength && didCardio;
-
-                            return (
-                                <View
-                                    key={day}
-                                    className="w-[14.28%] items-center"
-                                >
-                                    <View className="w-9 h-9 items-center justify-center relative">
-                                        <View
-                                            className={`absolute w-9 h-9 rounded-full border-2
-                                        ${didStrength ? "border-blue-500" : "border-slate-700"}
-                                    `}
-                                        />
-
-                                        <View
-                                            className={`absolute w-6 h-6 rounded-full border-2
-                                        ${didCardio ? "border-green-500" : "border-slate-700"}
-                                    `}
-                                        />
-
-                                        <Ionicons
-                                            name={
-                                                bothDone
-                                                    ? "flash"
-                                                    : didStrength
-                                                        ? "barbell"
-                                                        : didCardio
-                                                            ? "walk"
-                                                            : "ellipse-outline"
-                                            }
-                                            size={12}
-                                            color={
-                                                bothDone
-                                                    ? "#a855f7"
-                                                    : didStrength
-                                                        ? "#3b82f6"
-                                                        : didCardio
-                                                            ? "#22c55e"
-                                                            : "#475569"
-                                            }
-                                        />
-                                    </View>
-
-                                    <Text className="text-[10px] text-slate-400">
-                                        {day}
-                                    </Text>
-                                </View>
-                            );
-                        })}
-                    </View>
-
-                    <View className="flex-row justify-between mt-4 px-2">
-                        <Text className="text-xs text-blue-400">🏋️ Musculação</Text>
-                        <Text className="text-xs text-green-400">🏃 Aeróbico</Text>
-                        <Text className="text-xs text-purple-400">⚡ Ambos</Text>
-                    </View>
+                    <Text className="text-gray-500 text-xs font-bold uppercase tracking-wider">
+                        {monthNames[month]} {year}
+                    </Text>
                 </View>
-            </MotiView>
-        </View>
+
+                <View className="flex-row items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-lg border border-gray-100">
+                    <Dumbbell size={14} color="#0073B9" />
+                    <Text className="text-[#0073B9] text-[10px] font-black uppercase tracking-wider">
+                        Musculação
+                    </Text>
+                </View>
+            </View>
+
+            {/* Dias da Semana (D S T Q Q S S) */}
+            <View className="flex-row flex-wrap mb-2">
+                {weekdays.map((day, index) => (
+                    <View key={`weekday-${index}`} className="w-[14.28%] items-center mb-2">
+                        <Text className="text-gray-400 text-[10px] font-bold uppercase">
+                            {day}
+                        </Text>
+                    </View>
+                ))}
+
+                {/* Dias Vazios (Para alinhar o dia 1 ao dia da semana correto) */}
+                {emptyDays.map((_, index) => (
+                    <View key={`empty-${index}`} className="w-[14.28%] items-center mb-2" />
+                ))}
+
+                {/* Dias do Mês */}
+                {daysArray.map((day) => {
+                    const didTrain = frequencyByDay[day];
+                    const isToday = day === today.getDate();
+
+                    return (
+                        <View key={`day-${day}`} className="w-[14.28%] items-center mb-2">
+                            <View
+                                className={`w-8 h-8 rounded-full items-center justify-center 
+                                    ${didTrain ? 'bg-[#0073B9] shadow-sm shadow-[#0073B9]/30' : 'bg-gray-50'}
+                                    ${isToday && !didTrain ? 'border-2 border-gray-200 bg-white' : ''}
+                                `}
+                            >
+                                <Text
+                                    className={`text-xs font-bold
+                                        ${didTrain ? 'text-white' : 'text-gray-400'}
+                                        ${isToday && !didTrain ? 'text-[#1D2D3E]' : ''}
+                                    `}
+                                >
+                                    {day}
+                                </Text>
+                            </View>
+                        </View>
+                    );
+                })}
+            </View>
+        </MotiView>
     );
 }

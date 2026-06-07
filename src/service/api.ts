@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const api = axios.create({
-    baseURL: 'https://gym-backend.duckdns.org',
+    baseURL: 'http://192.168.1.115:8000',
     headers: {
         'Content-Type': 'application/json',
     },

@@ -37,11 +37,9 @@ export default function ProfileUpdate({ visible, onClose }: ProfileUpdateProps) 
             showCloseButton={false}
             title="Editar Perfil"
             subtitle="Personalize sua identidade no app"
-            // Mantém o cabeçalho com azul escuro para dar contraste ao cartão branco
-            headerColors={["#1e3a8a", "#0f172a"]}
         >
             <View>
-                {/* Input Nome de Usuário */}
+
                 <Text className="text-slate-600 text-[10px] font-bold mb-2 uppercase ml-1">Nome de usuário</Text>
                 <View className="flex-row items-center bg-slate-100 border border-slate-200 rounded-2xl px-4 py-3 mb-4">
                     <User size={18} color="#94a3b8" />

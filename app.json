@@ -16,20 +16,7 @@
     ],
     "ios": {
       "bundleIdentifier": "com.fitquest",
-      "supportsTablet": true,
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false,
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true,
-          "NSExceptionDomains": {
-            "duckdns.org": {
-              "NSIncludesSubdomains": true,
-              "NSExceptionAllowsInsecureHTTPLoads": true,
-              "NSExceptionRequiresForwardSecrecy": false
-            }
-          }
-        }
-      }
+      "supportsTablet": true
     },
     "android": {
       "package": "com.fitquest",
@@ -38,8 +25,7 @@
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE",
-        "ACCESS_WIFI_STATE",
-        "com.android.alarm.permission.SET_ALARM"
+        "ACCESS_WIFI_STATE"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
@@ -51,9 +37,9 @@
       "expo-secure-store"
     ],
     "extra": {
+      "API_URL": "http://192.168.1.115:8000",
       "eas": {
-        "projectId": "ad9b485a-cb89-43e7-a768-9bdcdb428310",
-        "API_URL": "https://gym-backend.duckdns.org"
+        "projectId": "9d24e44b-41f2-4fdb-b210-756430f42405"
       }
     }
   }

@@ -9,6 +9,7 @@ interface CustomModalProps extends ModalProps {
     title?: string;
     subtitle?: string;
     showCloseButton?: boolean;
+    // Alterado para o padrão de cores do seu App (Azul Premium)
     headerColors?: readonly [string, string, ...string[]];
     children: React.ReactNode;
 }
@@ -19,7 +20,7 @@ export const CustomModal = ({
     title,
     subtitle,
     showCloseButton = true,
-    headerColors = ["#1e3a8a", "#1D2D3E"],
+    headerColors = ["#1D2D3E", "#1D2D3E"],
     children,
     ...rest
 }: CustomModalProps) => {
@@ -32,26 +33,33 @@ export const CustomModal = ({
             {...rest}
         >
             <View className="flex-1 bg-black/80 justify-center items-center p-6">
-                <View className="bg-white w-full rounded-3xl border border-slate-200 overflow-hidden">
+                <View className="bg-white w-full rounded-3xl border border-slate-200 overflow-hidden shadow-lg">
+
                     {title && (
-                        <LinearGradient colors={headerColors} className="p-4 items-center relative">
+                        <LinearGradient colors={headerColors} className="p-5 items-center relative">
                             {showCloseButton && (
                                 <Pressable
                                     onPress={onClose}
-                                    className="absolute right-4 top-4 z-10 p-1 bg-black/20 rounded-full"
+                                    className="absolute right-4 top-4 z-10 p-1.5 bg-black/20 rounded-full active:bg-black/30"
                                 >
                                     <X size={18} color="white" />
                                 </Pressable>
                             )}
-                            <Text className="text-white text-xl font-bold text-center">{title}</Text>
+                            <Text className="text-white text-xl font-black text-center tracking-tight">
+                                {title}
+                            </Text>
                             {subtitle && (
-                                <Text className="text-slate-300/80 text-xs text-center">{subtitle}</Text>
+                                <Text className="text-white/80 text-xs text-center font-medium mt-1">
+                                    {subtitle}
+                                </Text>
                             )}
                         </LinearGradient>
                     )}
-                    <View className="p-5">
+
+                    <View className="p-6">
                         {children}
                     </View>
+
                 </View>
             </View>
         </Modal>

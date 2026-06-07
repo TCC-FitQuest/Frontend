@@ -24,6 +24,7 @@ import { EmailVerificationModal } from '../../components/modal/EmailVerification
 import { GymLoading } from '../../components/ui/GymLoading'
 
 import { useAuthStore } from '../../store/useAuthStore'
+import { ScreenBackground } from '../../components/ui/ScreenBackground'
 
 const MAX_NAME = 12
 const MAX_EMAIL = 100
@@ -123,10 +124,7 @@ export default function LoginScreen() {
     const passwordStrength = getPasswordStrength(form.password)
 
     return (
-        <LinearGradient
-            colors={['#0f172a', '#020617']}
-            style={{ flex: 1 }}
-        >
+        <ScreenBackground>
             <KeyboardAvoidingView
                 style={{ flex: 1 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -292,7 +290,7 @@ export default function LoginScreen() {
                     </ScrollView>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
-        </LinearGradient >
+        </ScreenBackground>
     )
 }
 

@@ -723,7 +723,7 @@ export function CreateTrainingProtocol() {
                                                 className="bg-gray-50 border border-gray-200 rounded-2xl p-3 mb-4 shadow-sm"
                                             >
                                                 {/* Nome do Exercício */}
-                                                <View className="flex-row items-center gap-2 mb-4">
+                                                <View className="flex-row items-center gap-2 mb-2">
                                                     <TextInput
                                                         value={exercise.name}
                                                         onChangeText={t => updateExercise(workout.id, exercise.id, { name: t })}
@@ -740,9 +740,8 @@ export function CreateTrainingProtocol() {
                                                     </Pressable>
                                                 </View>
 
-                                                {/* Seção de Séries */}
                                                 <View className="space-y-3">
-                                                    <View className="flex-row items-center justify-between px-1">
+                                                    <View className="flex-row items-center justify-between px-1 mb-1">
                                                         <Text className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">
                                                             Séries e Repetições
                                                         </Text>
