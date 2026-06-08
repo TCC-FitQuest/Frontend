@@ -153,7 +153,7 @@ export default function TrainingHistory() {
                     <View className="flex-row items-center justify-between">
                         <View>
                             <Text className="text-white text-3xl font-black tracking-tight">Meu Legado</Text>
-                            <View className="flex-row items-center mt-1 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20 self-start shadow-sm">
+                            <View className="flex-row items-center mt-1 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20 self-start">
                                 <Flame size={14} color="#FCD34D" fill="#FCD34D" />
                                 <Text className="text-white font-bold text-[10px] ml-1.5 uppercase tracking-wider">
                                     Nível {User?.level || 1} • {stats.totalXp} XP
@@ -170,7 +170,7 @@ export default function TrainingHistory() {
                 </View>
 
                 {/* Menu de Abas */}
-                <View className="bg-white/10 border border-white/20 rounded-2xl p-2 flex-row gap-2 shadow-sm mx-6 ">
+                <View className="bg-white/10 border border-white/20 rounded-2xl p-2 flex-row gap-2 mx-6 ">
                     <ActionButton
                         label="Jornada"
                         icon={<MapIcon color={activeTab === "journey" ? "white" : "#9CA3AF"} size={20} />}
@@ -222,7 +222,7 @@ export default function TrainingHistory() {
 
                                                 <TouchableOpacity
                                                     activeOpacity={0.9}
-                                                    className="w-[85%] bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm z-10"
+                                                    className="w-[85%] bg-white border border-gray-200 rounded-3xl overflow-hidden z-10"
                                                 >
                                                     <View
                                                         className="absolute left-0 top-0 bottom-0 w-2"
@@ -272,7 +272,7 @@ export default function TrainingHistory() {
                                                                 </Text>
                                                             </View>
 
-                                                            <View className="flex-row items-center bg-amber-50 px-2 py-1.5 rounded-lg border border-amber-200 shadow-sm">
+                                                            <View className="flex-row items-center bg-amber-50 px-2 py-1.5 rounded-lg border border-amber-200">
                                                                 <Zap size={12} color="#F59E0B" fill="#F59E0B" />
                                                                 <Text className="text-amber-600 text-xs font-black ml-1 uppercase tracking-wider">
                                                                     +{item.xp_earned} XP
@@ -293,7 +293,7 @@ export default function TrainingHistory() {
 
                             /* ABA: ESTATÍSTICAS */
                             <View className="pt-2 pb-10">
-                                <View className="bg-white rounded-[24px] p-4 shadow-sm border border-gray-200 mx-6">
+                                <View className="bg-white rounded-[24px] p-4 border border-gray-200 mx-6">
                                     <FrequencyTrainingMonth trainingHistoryMonth={history} />
                                 </View>
 
@@ -302,8 +302,7 @@ export default function TrainingHistory() {
                                 </Text>
 
                                 <View className="flex-row flex-wrap justify-between px-6 gap-y-4">
-                                    {/* Card: Ofensiva */}
-                                    <View className="w-[48%] bg-white p-4 rounded-[20px] border border-gray-200 shadow-sm">
+                                    <View className="w-[48%] bg-white p-4 rounded-[20px] border border-gray-200">
                                         <View className="w-10 h-10 rounded-full bg-orange-100 items-center justify-center mb-3">
                                             <Flame size={20} color="#F97316" fill="#F97316" />
                                         </View>
@@ -313,8 +312,7 @@ export default function TrainingHistory() {
                                         </Text>
                                     </View>
 
-                                    {/* Card: Total de Treinos */}
-                                    <View className="w-[48%] bg-white p-4 rounded-[20px] border border-gray-200 shadow-sm">
+                                    <View className="w-[48%] bg-white p-4 rounded-[20px] border border-gray-200">
                                         <View className="w-10 h-10 rounded-full bg-[#0073B9]/10 items-center justify-center mb-3">
                                             <Dumbbell size={20} color="#0073B9" />
                                         </View>
@@ -322,8 +320,7 @@ export default function TrainingHistory() {
                                         <Text className="text-[#1D2D3E] text-2xl font-black">{stats.totalWorkouts}</Text>
                                     </View>
 
-                                    {/* Card: Tempo Médio */}
-                                    <View className="w-[48%] bg-white p-4 rounded-[20px] border border-gray-200 shadow-sm">
+                                    <View className="w-[48%] bg-white p-4 rounded-[20px] border border-gray-200">
                                         <View className="w-10 h-10 rounded-full bg-emerald-100 items-center justify-center mb-3">
                                             <Clock size={20} color="#10B981" />
                                         </View>
@@ -331,8 +328,7 @@ export default function TrainingHistory() {
                                         <Text className="text-[#1D2D3E] text-2xl font-black">{stats.avgDuration}<Text className="text-sm text-gray-400 font-bold">m</Text></Text>
                                     </View>
 
-                                    {/* Card: XP Total */}
-                                    <View className="w-[48%] bg-white p-4 rounded-[20px] border border-gray-200 shadow-sm">
+                                    <View className="w-[48%] bg-white p-4 rounded-[20px] border border-gray-200">
                                         <View className="w-10 h-10 rounded-full bg-purple-100 items-center justify-center mb-3">
                                             <Zap size={20} color="#8B5CF6" />
                                         </View>

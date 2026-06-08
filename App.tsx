@@ -16,13 +16,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <SafeAreaProvider>
-        <ThemeProvider>
-          <ToastProvider>
-
-            <AppNavigator />
-
-          </ToastProvider>
-        </ThemeProvider>
+        <ToastProvider>
+          <AppNavigator />
+        </ToastProvider>
       </SafeAreaProvider>
     </NavigationContainer>
   );

@@ -46,7 +46,7 @@ function TrainingNode({ training, index, trainingHistory, onPress }: any) {
         if (latestHistory.status === 'progress') {
             isProgress = true;
             statusText = "Em andamento";
-            borderColor = "border-[#0073B9] bg-white shadow-[#0073B9]/20 shadow-md"; // Destaque azul
+            borderColor = "border-[#0073B9] bg-white";
             badgeColor = "bg-[#0073B9]/10";
             badgeTextColor = "text-[#0073B9]";
             iconName = "play-circle-outline";
@@ -256,7 +256,7 @@ export function TrainingScreen() {
                         showsVerticalScrollIndicator={false}
                     >
 
-                        <View className="bg-white border border-gray-200 shadow-sm rounded-2xl p-4 mb-6">
+                        <View className="bg-white border border-gray-200 rounded-2xl p-4 mb-6">
                             <FrequencyTraining
                                 trainingHistoryWeek={[...trainingProtocolHistoryStrength, ...trainingProtocolHistoryAerobic]}
                             />

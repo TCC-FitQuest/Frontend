@@ -9,6 +9,7 @@ import {
     Platform,
     TouchableWithoutFeedback,
     Keyboard,
+    Image,
 } from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient'
@@ -147,20 +148,11 @@ export default function LoginScreen() {
                         <View className="flex-1 justify-center px-6 py-12">
 
                             <View className="items-center mb-8">
-                                <LinearGradient
-                                    colors={['#007bff', '#0056b3']}
-                                    className="w-20 h-20 rounded-3xl items-center justify-center mb-4 shadow-lg shadow-blue-500/30"
-                                >
-                                    <Ionicons
-                                        name="barbell-outline"
-                                        size={40}
-                                        color="#fff"
-                                    />
-                                </LinearGradient>
-
-                                <Text className="text-white text-3xl font-black tracking-tight">
-                                    FitQuest
-                                </Text>
+                                <Image
+                                    source={require('../../../assets/icon.png')}
+                                    className="w-32 h-32 rounded-3xl mb-4"
+                                    resizeMode="contain"
+                                />
                                 <Text className="text-slate-400 text-sm mt-1 font-medium">
                                     Transforme seu treino em aventura
                                 </Text>
@@ -269,7 +261,7 @@ export default function LoginScreen() {
                                         <TouchableOpacity
                                             onPress={handleSubmit}
                                             disabled={loading}
-                                            className="bg-[#007bff] py-4 rounded-2xl items-center shadow-md shadow-blue-500/20 active:bg-[#0069d9]"
+                                            className="bg-[#007bff] py-4 rounded-2xl items-center active:bg-[#0069d9]"
                                             activeOpacity={0.8}
                                         >
                                             <Text className="text-white text-center font-bold uppercase text-xs tracking-wider">

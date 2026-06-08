@@ -15,11 +15,12 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.fitquest",
+      "bundleIdentifier": "com.FitQuest",
       "supportsTablet": true
     },
     "android": {
-      "package": "com.fitquest",
+      "package": "com.FitQuest",
+      "versionCode": 1,
       "softwareKeyboardLayoutMode": "resize",
       "usesCleartextTraffic": true,
       "permissions": [
@@ -37,7 +38,7 @@
       "expo-secure-store"
     ],
     "extra": {
-      "API_URL": "http://192.168.1.115:8000",
+      "API_URL": "https://gym-backend.duckdns.org",
       "eas": {
         "projectId": "9d24e44b-41f2-4fdb-b210-756430f42405"
       }

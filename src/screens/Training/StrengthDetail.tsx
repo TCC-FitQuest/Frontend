@@ -30,6 +30,7 @@ import { ScreenBackground } from '../../components/ui/ScreenBackground';
 
 import { Header } from '../../components/ui/Header';
 import { useTimerStore } from '../../store/useTimerStore';
+import { ActionButton } from '../../components/ui/ActionButton';
 
 interface TrainingExerciseSet {
     id: number;
@@ -246,7 +247,10 @@ export default function TrainingDetail() {
             };
 
             const response = await createdTrainingHistory(data);
-            setTrainingProtocolHistoryStrength([...trainingProtocolHistoryStrength, { ...data, id: response.id }])
+            setTrainingProtocolHistoryStrength([
+                ...(trainingProtocolHistoryStrength || []),
+                { ...data, id: response.id }
+            ])
             setTrainingHistory(response);
             setSelectedTraining({ ...selectedTraining, status: 'progress' });
         } catch (error) {
@@ -385,15 +389,19 @@ export default function TrainingDetail() {
                                 </Text>
                             </View>
                         ) : (
+
                             <TouchableOpacity
-                                onPress={isCurrentTrainingInProgress ? () => setShowFinishModal(true) : handleStartTraining}
-                                className={`py-3.5 rounded-xl flex-row justify-center items-center gap-2 shadow-sm ${isCurrentTrainingInProgress ? "bg-[#10B981]" : "bg-[#0073B9]"}`}
+                                onPress={isCurrentTrainingInProgress ? () => setShowFinishModal(true) : () => handleStartTraining()}
+                                className={`py-3.5 rounded-xl flex-row justify-center items-center gap-2 ${isCurrentTrainingInProgress ? "bg-[#10B981]" : "bg-[#0073B9]"}`}
                             >
                                 <Play color="#FFFFFF" size={18} />
                                 <Text className="font-bold text-white uppercase tracking-wider text-sm">
                                     {isCurrentTrainingInProgress ? "Finalizar Treino" : "Iniciar Treino"}
                                 </Text>
                             </TouchableOpacity>
+
+
+
                         )}
 
                         <View className="flex-row justify-between items-center">
