@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { useTrainingStore } from '../../store/useTrainingStore'
 import { DAYS, DAYS_ORDER } from '../../utils/days'
 import { ScreenBackground } from '../../components/ui/ScreenBackground'
+import { useToast } from '../../components/ui/ToastProvider'
 
 interface SetItem {
     id?: number
@@ -41,6 +42,7 @@ interface Workout {
 }
 
 export function CreateTrainingProtocol() {
+    const { showToast } = useToast() as any;
     const navigation = useNavigation<NavigationProp<NavigationTypes>>();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -167,6 +169,7 @@ export function CreateTrainingProtocol() {
                 setWorkouts(formattedWorkouts);
             } catch (err) {
                 console.error('Erro ao carregar protocolo', err)
+                showToast('Erro ao carregar os dados do protocolo.', 'error');
             }
         }
 
@@ -371,6 +374,9 @@ export function CreateTrainingProtocol() {
         try {
             setIsLoading(true)
 
+            // Identifica se é uma edição baseada na existência do ID
+            const isEditing = !!protocolId;
+
             if (setsToDelete.length > 0) {
                 await Promise.all(setsToDelete.map(id => api.delete(`/api/exercise/sets/${id}`)));
             }
@@ -392,7 +398,7 @@ export function CreateTrainingProtocol() {
 
             let currentProtocolId = protocolId
 
-            if (protocolId) {
+            if (isEditing) {
                 await api.put(
                     `/api/training_protocol/${protocolId}`,
                     protocolPayload,
@@ -502,9 +508,13 @@ export function CreateTrainingProtocol() {
                 }
             }
 
-            navigation.goBack()
+            // Dispara o Toast correto
+            showToast(isEditing ? 'Protocolo atualizado com sucesso!' : 'Protocolo criado com sucesso!', 'success');
+            navigation.goBack();
+
         } catch (e) {
             console.error('Erro ao salvar protocolo', e)
+            showToast('Erro ao salvar o protocolo. Tente novamente.', 'error');
         } finally {
             setIsLoading(false)
         }
@@ -528,10 +538,10 @@ export function CreateTrainingProtocol() {
 
                         <View className="flex-1 px-2">
                             <Text className="text-white font-black text-xl tracking-tight">
-                                Criar Protocolo
+                                {protocolId ? 'Editar Protocolo' : 'Criar Protocolo'}
                             </Text>
                             <Text className="text-white/60 text-xs font-medium">
-                                Monte seu programa de treinos
+                                {protocolId ? 'Modifique seu programa de treinos' : 'Monte seu programa de treinos'}
                             </Text>
                         </View>
 
@@ -551,7 +561,7 @@ export function CreateTrainingProtocol() {
 
                 {isLoading ? (
                     <GymLoading
-                        text1="Carregando protocolo..."
+                        text1={protocolId ? "Salvando alterações..." : "Criando protocolo..."}
                         text2="Isso pode levar alguns segundos"
                     />
                 ) : (
@@ -629,36 +639,6 @@ export function CreateTrainingProtocol() {
                             >
                                 {/* Cabeçalho do Treino (Dias e Nome) */}
                                 <View className="p-4 bg-gray-50 border-b border-gray-200">
-
-
-                                    {/*     <View className="flex-row justify-between mb-4 px-1">
-                                        {DAYS?.map((day: any) => {
-                                            const isSelected = workout.day === day.key;
-                                            return (
-                                                <TouchableOpacity
-                                                    key={day.key}
-                                                    onPress={() => handleSelectDay(workout.id, day.key)}
-                                                    className="items-center"
-                                                >
-                                                    <View className="w-9 h-9 items-center justify-center mb-1">
-                                                        <View
-                                                            className={`absolute w-8 h-8 rounded-full border-2 transition-all ${isSelected ? "border-[#0073B9] bg-[#0073B9]/10" : "border-gray-300 bg-white"
-                                                                }`}
-                                                        />
-                                                        <Ionicons
-                                                            name={isSelected ? "checkmark-sharp" : "add-outline"}
-                                                            size={16}
-                                                            color={isSelected ? "#0073B9" : "#9CA3AF"}
-                                                        />
-                                                    </View>
-                                                    <Text className={`text-[10px] uppercase font-bold tracking-wider ${isSelected ? "text-[#0073B9]" : "text-gray-400"}`}>
-                                                        {day.label}
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            );
-                                        })}
-                                    </View> */}
-
                                     {/* Nome e Ações do Treino */}
                                     <View className="flex-row gap-3 items-center">
                                         <View className="w-10 h-10 rounded-xl bg-white border border-gray-200 items-center justify-center shadow-sm">
@@ -820,4 +800,3 @@ export function CreateTrainingProtocol() {
         </ScreenBackground>
     );
 }
-

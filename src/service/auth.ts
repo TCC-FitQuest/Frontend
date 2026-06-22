@@ -25,3 +25,20 @@ export async function sendEmailVerification(email: string) {
     const response = await api.post<any>(`/api/auth/resend-email-verification?email=${email}`);
     return response.data;
 }
+
+export async function sendEmailResetPasswordRequest(data: {
+    email: string;
+}) {
+    const res = await api.post('/api/auth/send-email-reset-password', data);
+    return res.data;
+}
+
+export async function resetPassword(data: any) {
+    const res = await api.post('/api/auth/reset-password', data);
+    return res.data;
+}
+
+export async function changePassword(data: any) {
+    const res = await api.post('/api/users/change-password', data);
+    return res.data;
+}

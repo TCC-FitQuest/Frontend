@@ -57,7 +57,6 @@ function TrainingNode({ training, index, trainingHistory, onPress }: any) {
         } else if (latestHistory.status === 'complete') {
             isComplete = true;
             statusText = "Concluído";
-            // Paleta neutra para treino concluído (fundo cinza claro) para não distrair
             borderColor = "border-gray-200 bg-[#F9FAFB]";
             badgeColor = "bg-[#10B981]/10";
             badgeTextColor = "text-[#10B981]";
@@ -219,6 +218,7 @@ export function TrainingScreen() {
                         setProtocol(response);
                     })
                     .catch((error) => {
+                        setProtocol(null);
                         console.error("Error fetching protocol:", error);
                     });
 
@@ -232,6 +232,7 @@ export function TrainingScreen() {
                         setTrainingProtocol(sorted);
                     })
                     .catch((error) => {
+                        setTrainingProtocol([]);
                         console.error("Error fetching training:", error);
                     });
             }
@@ -241,7 +242,7 @@ export function TrainingScreen() {
             console.error(error);
         }
     }, [User]);
-
+    console.log("---><", protocol);
     return (
         <ScreenBackground>
             <Header />

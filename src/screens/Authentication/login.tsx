@@ -12,7 +12,6 @@ import {
     Image,
 } from 'react-native'
 
-import { LinearGradient } from 'expo-linear-gradient'
 import { Ionicons } from '@expo/vector-icons'
 import { NavigationProp, useNavigation } from '@react-navigation/native'
 import * as SecureStore from 'expo-secure-store'
@@ -22,14 +21,19 @@ import { useUserStore } from '../../store/useUserStore'
 import { NavigationTypes } from '../../navigation/types'
 import { UserRole } from '../../models/UserModel'
 import { EmailVerificationModal } from '../../components/modal/EmailVerificationModal'
+import { ForgotPasswordModal } from '../../components/modal/ForgotPasswordModal'
 import { GymLoading } from '../../components/ui/GymLoading'
-
 import { useAuthStore } from '../../store/useAuthStore'
 import { ScreenBackground } from '../../components/ui/ScreenBackground'
+import { useToast } from '../../components/ui/ToastProvider'
 
 const MAX_NAME = 12
 const MAX_EMAIL = 100
 const MAX_PASSWORD = 50
+
+interface ToastContextType {
+    showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
+}
 
 function getPasswordStrength(password: string) {
     let score = 0
@@ -47,6 +51,7 @@ function getPasswordStrength(password: string) {
 }
 
 export default function LoginScreen() {
+    const { showToast } = useToast() as ToastContextType;
     const navigation = useNavigation<NavigationProp<NavigationTypes>>()
     const setUser = useUserStore((s) => s.setUser)
     const setToken = useAuthStore((s) => s.setToken)
@@ -56,6 +61,7 @@ export default function LoginScreen() {
     const [loading, setLoading] = useState(false)
     const [showVerification, setShowVerification] = useState(false)
     const [showPassword, setShowPassword] = useState(false)
+    const [showForgotModal, setShowForgotModal] = useState(false)
 
     const [form, setForm] = useState({
         name: '',
@@ -71,19 +77,26 @@ export default function LoginScreen() {
     }
 
     async function handleSubmit() {
-        if (loading) return
+        if (loading) return;
+
+        if (!form.email || !form.password) {
+            showToast('Preencha todos os campos obrigatórios.', 'error');
+            return;
+        }
 
         try {
             setLoading(true)
 
             if (isSignUp) {
                 if (form.name.length < 3) {
-                    console.log('Nome muito curto')
+                    showToast('O nome deve ter pelo menos 3 caracteres.', 'error');
+                    setLoading(false);
                     return
                 }
 
                 if (form.password.length < 8) {
-                    console.log('Senha muito fraca')
+                    showToast('A senha deve ter pelo menos 8 caracteres.', 'error');
+                    setLoading(false);
                     return
                 }
 
@@ -97,10 +110,11 @@ export default function LoginScreen() {
 
                 await singupAPI(payload)
 
+                showToast('Conta criada! Inicie a verificação.', 'success');
                 setShowVerification(true)
-
                 handleChange('password', '')
                 setIsSignUp(false)
+
             } else {
                 const response = await loginAPI({
                     email: form.email.trim(),
@@ -117,6 +131,7 @@ export default function LoginScreen() {
             }
         } catch (error) {
             console.error(error)
+            showToast(isSignUp ? 'Erro ao criar conta. Verifique os dados.' : 'Credenciais inválidas. Tente novamente.', 'error');
         } finally {
             setLoading(false)
         }
@@ -143,6 +158,11 @@ export default function LoginScreen() {
                     onClose={() => setShowVerification(false)}
                 />
 
+                <ForgotPasswordModal
+                    visible={showForgotModal}
+                    onClose={() => setShowForgotModal(false)}
+                />
+
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
                         <View className="flex-1 justify-center px-6 py-12">
@@ -157,7 +177,6 @@ export default function LoginScreen() {
                                     Transforme seu treino em aventura
                                 </Text>
                             </View>
-
 
                             <View className="bg-white rounded-[32px] p-6 shadow-xl border border-slate-100">
                                 {loading ? (
@@ -219,7 +238,7 @@ export default function LoginScreen() {
                                             />
                                         </View>
 
-                                        <View className="mb-8">
+                                        <View className={isSignUp ? "mb-8" : "mb-6"}>
                                             <Text className="text-slate-600 text-[10px] font-bold uppercase mb-2 ml-1">
                                                 Senha
                                             </Text>
@@ -269,6 +288,17 @@ export default function LoginScreen() {
                                             </Text>
                                         </TouchableOpacity>
 
+                                        {!isSignUp && (
+                                            <TouchableOpacity
+                                                onPress={() => setShowForgotModal(true)}
+                                                className="mt-6 items-center p-2"
+                                            >
+                                                <Text className="text-slate-500 text-[11px] font-medium">
+                                                    Esqueceu a sua senha? <Text className="text-[#007bff] font-bold">Recuperar</Text>
+                                                </Text>
+                                            </TouchableOpacity>
+                                        )}
+
                                         {isSignUp && (
                                             <Text className="text-slate-400 text-[10px] text-center mt-5 font-medium px-4">
                                                 Ao criar uma conta, você concorda com nossos termos de uso e política de privacidade.
@@ -277,7 +307,6 @@ export default function LoginScreen() {
                                     </>
                                 )}
                             </View>
-
                         </View>
                     </ScrollView>
                 </TouchableWithoutFeedback>

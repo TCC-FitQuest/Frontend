@@ -12,6 +12,7 @@ import AthleteTabNavigator from './AthleteTabNavigator';
 
 import { useAuthStore } from '../store/useAuthStore';
 import { useUserStore } from '../store/useUserStore';
+import CompetitionScreen from '../screens/Competition/Competition';
 
 const Stack = createNativeStackNavigator();
 
