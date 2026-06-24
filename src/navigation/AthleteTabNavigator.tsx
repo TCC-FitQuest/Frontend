@@ -9,6 +9,7 @@ import Leaderboard from '../screens/Leaderboard/Leaderboard';
 import { BottomNavigation } from '../components/ui/BottomNavigation';
 import TrainingHistory from '../screens/Training/TrainingHistory';
 import FriendsTab from '../screens/Friends/FriendsScreen';
+import CompetitionScreen from '../screens/Competition/Competition';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,7 @@ export default function AthleteTabNavigator() {
             <Tab.Screen name="TrainingScreen" component={TrainingScreen} />
             <Tab.Screen name="TrainingHistory" component={TrainingHistory} />
             <Tab.Screen name="Leaderboard" component={Leaderboard} />
+            <Tab.Screen name="Competition" component={CompetitionScreen} />
             <Tab.Screen name="Friends" component={FriendsTab} />
             <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>

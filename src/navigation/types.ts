@@ -14,5 +14,5 @@ export type NavigationTypes = {
     ProtocolsManagementScreen: undefined;
     ChallengesScreen: undefined;
     AvatarScreen: undefined;
-
+    Competition: undefined;
 };

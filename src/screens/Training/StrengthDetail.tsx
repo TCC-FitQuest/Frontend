@@ -339,20 +339,6 @@ export default function TrainingDetail() {
         navigation.navigate("MainHome");
     }
 
-    const handleUpdateSetData = (exerciseId: number, setId: number, field: 'weight_used' | 'reps_performed', value: string) => {
-        const updated = trainingExercise.map((ex) => {
-            if (ex.id !== exerciseId) return ex;
-            const updatedSets = ex.sets.map((s) => {
-                if (s.id !== setId) return s;
-                return { ...s, [field]: value };
-            });
-            return { ...ex, sets: updatedSets };
-        });
-
-        setTrainingExerciseHistory(updated);
-        setTrainingExercise(updated);
-    };
-
     const totalSets = trainingExercise.length;
     const completedCount = trainingExercise.filter(ex => ex.status === "complete").length;
     const progress = totalSets > 0 ? (completedCount / totalSets) * 100 : 0;
@@ -372,12 +358,6 @@ export default function TrainingDetail() {
                             <Text className="text-white font-bold text-xs uppercase tracking-wider">Voltar</Text>
                         </TouchableOpacity>
 
-                        {/*   <TouchableOpacity
-                            onPress={() => setShowQrModal(true)}
-                            className="p-2.5 bg-white/10 rounded-xl border border-white/20 shadow-sm"
-                        >
-                            <Share2 color="#FFFFFF" size={18} />
-                        </TouchableOpacity> */}
                     </View>
 
                     <View className="mx-6 mb-6 bg-white border border-gray-200 rounded-2xl p-4 gap-4 shadow-sm">
@@ -519,7 +499,7 @@ export default function TrainingDetail() {
                     </TouchableOpacity>
                 </Modal>
 
-                {/* MODAL DE TREINO FINALIZADO */}
+
                 <Modal visible={showFinishModal} transparent animationType="fade">
                     <View className="flex-1 bg-black/70 justify-center items-center p-6">
                         <View className="bg-white rounded-3xl p-6 w-full max-w-sm gap-5 shadow-2xl">
@@ -603,33 +583,32 @@ export default function TrainingDetail() {
                         </View>
                     </View>
                 </Modal>
-            </View>
+                <View style={{ position: 'absolute', bottom: 40, left: 24, right: 24 }}>
+                    {timer !== "00:00" && (
+                        <View className="bg-white border border-gray-200 p-4 rounded-3xl flex-row items-center justify-between shadow-2xl shadow-black/50">
+                            <View className="flex-row items-center gap-4">
+                                <View className="bg-[#0073B9]/10 p-3 rounded-2xl border border-[#0073B9]/20">
+                                    <Clock color="#0073B9" size={24} />
+                                </View>
+                                <View>
+                                    <Text className="text-[#0073B9] text-[10px] font-bold uppercase tracking-widest">
+                                        Descanso Ativo
+                                    </Text>
+                                    <Text className="text-[#1D2D3E] text-3xl font-black leading-none mt-1">
+                                        {timer}
+                                    </Text>
+                                </View>
+                            </View>
 
-            <View style={{ position: 'absolute', bottom: 40, left: 24, right: 24 }}>
-                {timer !== "00:00" && (
-                    <View className="bg-white border border-gray-200 p-4 rounded-3xl flex-row items-center justify-between shadow-2xl shadow-black/50">
-                        <View className="flex-row items-center gap-4">
-                            <View className="bg-[#0073B9]/10 p-3 rounded-2xl border border-[#0073B9]/20">
-                                <Clock color="#0073B9" size={24} />
-                            </View>
-                            <View>
-                                <Text className="text-[#0073B9] text-[10px] font-bold uppercase tracking-widest">
-                                    Descanso Ativo
-                                </Text>
-                                <Text className="text-[#1D2D3E] text-3xl font-black leading-none mt-1">
-                                    {timer}
-                                </Text>
-                            </View>
+                            <TouchableOpacity
+                                onPress={() => resetTimer()}
+                                className="bg-red-50 p-3.5 rounded-2xl border border-red-100"
+                            >
+                                <X color="#EF4444" size={20} />
+                            </TouchableOpacity>
                         </View>
-
-                        <TouchableOpacity
-                            onPress={() => resetTimer()}
-                            className="bg-red-50 p-3.5 rounded-2xl border border-red-100"
-                        >
-                            <X color="#EF4444" size={20} />
-                        </TouchableOpacity>
-                    </View>
-                )}
+                    )}
+                </View>
             </View>
         </ScreenBackground>
     );

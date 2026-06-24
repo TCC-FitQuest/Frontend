@@ -85,5 +85,3 @@ Ela executa:
 - `npm run typecheck`;
 - build da imagem `Dockerfile`;
 - publicação no GHCR em push para `main` ou `master`.
-
-Como este repositório é separado do backend, a workflow usa caminhos relativos à própria raiz: `package-lock.json`, `package.json`, `Dockerfile` e `src/`.

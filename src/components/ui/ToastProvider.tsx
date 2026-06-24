@@ -7,12 +7,18 @@ interface Toast {
     type: 'success' | 'error';
 }
 
-const ToastContext = createContext({});
+interface ToastContextType {
+    showToast: (message: string, type?: 'success' | 'error') => void;
+    toast: Toast;
+    hideToast: () => void;
+}
+
+const ToastContext = createContext<ToastContextType>({} as ToastContextType);
 
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     const [toast, setToast] = useState<Toast>({ visible: false, message: '', type: 'success' });
 
-    const showToast = useCallback((message: any, type: 'success' | 'error' = 'success') => {
+    const showToast = useCallback((message: string, type: 'success' | 'error' = 'success') => {
         setToast({ visible: true, message, type });
     }, []);
 
@@ -21,7 +27,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <ToastContext.Provider value={{ showToast }}>
+        <ToastContext.Provider value={{ showToast, toast, hideToast }}>
             {children}
             <GameToast
                 visible={toast.visible}
@@ -34,3 +40,16 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useToast = () => useContext(ToastContext);
+
+export const ToastOutlet = () => {
+    const { toast, hideToast } = useToast();
+
+    return (
+        <GameToast
+            visible={toast.visible}
+            message={toast.message}
+            type={toast.type}
+            onClose={hideToast}
+        />
+    );
+};
