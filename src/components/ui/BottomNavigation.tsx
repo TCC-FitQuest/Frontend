@@ -11,6 +11,7 @@ const routeConfig: Record<string, { label: string; icon: string }> = {
     TrainingScreen: { label: "Treino", icon: "barbell" },
     TrainingHistory: { label: "Histórico", icon: "book" },
     Leaderboard: { label: "Ranking", icon: "trophy" },
+    Competition: { label: "Competição", icon: "medal" },
     Friends: { label: "Amigos", icon: "people" },
     Profile: { label: "Perfil", icon: "person" },
 };

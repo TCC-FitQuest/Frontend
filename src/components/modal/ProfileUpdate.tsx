@@ -4,6 +4,7 @@ import { User } from 'lucide-react-native';
 import { CustomModal } from "./CustomModal";
 import { useUserStore } from '../../store/useUserStore';
 import { updateUser } from '../../service/userService';
+import { useToast } from '../ui/ToastProvider';
 
 interface ProfileUpdateProps {
     visible: boolean;
@@ -17,6 +18,7 @@ export default function ProfileUpdate({ visible, onClose }: ProfileUpdateProps) 
     const [displayName, setDisplayName] = useState(user?.username.split('#')[0] ?? "");
     const userIdTag = user?.username.split('#')[1] ?? "0000";
     const [bio, setBio] = useState(user?.bio ?? "");
+    const { showToast } = useToast() as any;
 
     const handleUpdateProfile = () => {
         if (!user) return;
@@ -25,9 +27,13 @@ export default function ProfileUpdate({ visible, onClose }: ProfileUpdateProps) 
         updateUser(user.id, { username: finalUsername, bio })
             .then(() => {
                 updateUserStore({ username: finalUsername, bio });
+                showToast('PERFIL ATUALIZADO!', 'success');
                 onClose();
             })
-            .catch(err => console.error("Erro ao atualizar:", err));
+            .catch((err) => {
+                console.error("Erro ao atualizar:", err)
+                showToast('ERRO AO ATUALIZAR PERFIL!', 'error')
+            });
     };
 
     return (
@@ -73,7 +79,6 @@ export default function ProfileUpdate({ visible, onClose }: ProfileUpdateProps) 
                     </Text>
                 </View>
 
-                {/* Botões de Ação */}
                 <View className="flex-row gap-3">
                     <Pressable
                         onPress={() => onClose()}

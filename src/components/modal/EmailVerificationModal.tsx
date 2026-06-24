@@ -13,6 +13,7 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { emailConfirmation, sendEmailVerification } from '../../service/auth';
+import { useToast } from '../../components/ui/ToastProvider';
 
 interface Props {
     visible: boolean;
@@ -25,6 +26,10 @@ interface Props {
 
 type ModalStep = 'ask_2fa' | 'verify_code';
 
+interface ToastContextType {
+    showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
+}
+
 export function EmailVerificationModal({
     visible,
     email,
@@ -34,8 +39,8 @@ export function EmailVerificationModal({
     const [step, setStep] = useState<ModalStep>('ask_2fa');
     const [code, setCode] = useState('');
     const [isSendingCode, setIsSendingCode] = useState(false);
+    const { showToast } = useToast() as ToastContextType;
 
-    // Reseta o estado do modal sempre que ele for aberto
     useEffect(() => {
         if (visible) {
             setStep('ask_2fa');
@@ -50,16 +55,12 @@ export function EmailVerificationModal({
                 code: code
             };
 
-            await emailConfirmation(data)
-                .then(response => {
-                    onClose?.();
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-
+            await emailConfirmation(data);
+            showToast('Conta ativada com sucesso!', 'success');
+            onClose?.();
         } catch (e) {
             console.error(e);
+            showToast('Erro ao verificar o código. Tente novamente.', 'error');
         }
     }
 
@@ -67,14 +68,15 @@ export function EmailVerificationModal({
         try {
             setIsSendingCode(true);
             await sendEmailVerification(encodeURIComponent(email));
+            showToast('Código enviado para o seu e-mail!', 'success');
         } catch (e) {
             console.error(e);
+            showToast('Erro ao enviar o código. Tente novamente.', 'error');
         } finally {
             setIsSendingCode(false);
         }
     }
 
-    // Função que é chamada quando o usuário aceita o 2FA
     async function handleEnable2FA() {
         await handleSendEmailVerification();
         setStep('verify_code');
@@ -88,7 +90,6 @@ export function EmailVerificationModal({
                 >
                     <View className="bg-white rounded-[32px] p-8 shadow-2xl border border-slate-100">
 
-                        {/* Botão fechar principal */}
                         <TouchableOpacity
                             onPress={onClose}
                             className="absolute right-5 top-5 z-10 bg-slate-100 p-1.5 rounded-full"
@@ -97,9 +98,7 @@ export function EmailVerificationModal({
                             <Ionicons name="close" size={20} color="#64748b" />
                         </TouchableOpacity>
 
-                        {/* RENDERIZAÇÃO CONDICIONAL DOS PASSOS */}
                         {step === 'ask_2fa' ? (
-                            // --- PASSO 1: PERGUNTA SE QUER ATIVAR 2FA ---
                             <>
                                 <View className="items-center mb-6 mt-2">
                                     <LinearGradient
@@ -151,7 +150,6 @@ export function EmailVerificationModal({
                                 </View>
                             </>
                         ) : (
-                            // --- PASSO 2: INSERIR O CÓDIGO ---
                             <>
                                 <View className="items-center mb-6 mt-2">
                                     <LinearGradient
